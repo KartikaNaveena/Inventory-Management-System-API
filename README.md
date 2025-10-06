@@ -13,7 +13,8 @@
 4. [API Endpoints](#api-endpoints)
 5. [Installation & Setup](#installation--setup)
 6. [Testing the API](#testing-the-api)
-7. [Developer](#developer)
+7. [Developer](#-developer)
+
 
 ## Project Overview
 
@@ -462,7 +463,7 @@ Follow these steps to set up the Inventory Management API locally:
 - The response returns **no content** (HTTP status 204) if the deletion is successful.  
 - Once deleted, the product cannot be retrieved unless re-created via the Create Product API.
 
-## 👨‍💻 Developer
+## Developer
 
 **Saladi Kartika Naveena** – B.Tech (CSE, 2025), two SDE internships at Amazon.
 

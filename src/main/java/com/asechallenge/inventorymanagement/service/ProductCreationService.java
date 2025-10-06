@@ -1,8 +1,11 @@
 package com.asechallenge.inventorymanagement.service;
 
 import org.springframework.stereotype.Service;
+
+import com.asechallenge.inventorymanagement.dto.ProductCreationRequestDTO;
 import com.asechallenge.inventorymanagement.entity.Product;
 import com.asechallenge.inventorymanagement.repository.ProductRepository;
+import com.asechallenge.inventorymanagement.util.SkuGenerator;
 import com.asechallenge.inventorymanagement.exception.DuplicateProductException;
 
 @Service
@@ -14,45 +17,39 @@ public class ProductCreationService {
         this.productRepository = productRepository;
     }
 
-    public Product createProduct(String name, String variant, String description,
-                                 Integer stockQuantity, Integer lowStockThreshold) {
+     public Product createProduct(ProductCreationRequestDTO request) {
+        String name = normalizeName(request.getName());
+        String variant = normalizeVariant(request.getVariant());
+        int stockQuantity = defaultStockIfNull(request.getStockQuantity());
+        int lowStockThreshold = request.getLowStockThreshold();
 
-        // Apply defaults if needed
-        variant = defaultVariantIfNull(variant);
-        stockQuantity = defaultStockIfNull(stockQuantity);
+        String sku = SkuGenerator.generateSKU(name.trim(), variant.trim());
 
-        // Check if product already exists
-        if (isProductAlreadyPresent(name, variant)) {
-            String variantDisplay = variant.isBlank() ? "<empty>" : variant;
-            throw new DuplicateProductException(
-                "Product with name '" + name + "' and variant '" + variantDisplay + "' already exists"
-            );
-        }
+        checkDuplicate(sku, name, variant);
 
-        // Generate SKU
-        String sku = generateSKU(name, variant);
+        Product product = new Product(name, variant, request.getDescription(),
+                                      stockQuantity, lowStockThreshold, sku);
 
-        // Create and save product
-        Product product = new Product(name, variant, description, stockQuantity, lowStockThreshold, sku);
         return productRepository.save(product);
     }
 
-    private String defaultVariantIfNull(String variant) {
+    private String normalizeName(String name) {
+        return name.trim();
+    }
+
+    private String normalizeVariant(String variant) {
         return (variant == null) ? "" : variant.trim();
     }
 
-    private Integer defaultStockIfNull(Integer stockQuantity) {
+    private int defaultStockIfNull(Integer stockQuantity) {
         return (stockQuantity == null) ? 0 : stockQuantity;
     }
 
-    private boolean isProductAlreadyPresent(String name, String variant) {
-        return productRepository.existsProductByNameAndVariant(name, variant);
-    }
-
-    private String generateSKU(String name, String variant) {
-        String base = name.replaceAll("\\s+", "").toLowerCase();
-        if (variant.isBlank()) return base;
-        String camelVariant = variant.substring(0,1).toUpperCase() + variant.substring(1).toLowerCase();
-        return base + camelVariant;
+    private void checkDuplicate(String sku, String name, String variant) {
+        if (productRepository.findBySkuIgnoreCase(sku).isPresent()) {
+            throw new DuplicateProductException(
+                    String.format("Product with given name and variant already exists")
+            );
+        }
     }
 }

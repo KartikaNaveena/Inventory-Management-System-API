@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.Min;
 
 @Entity
 @Table(
@@ -31,9 +32,11 @@ public class Product {
     @Column
     private String description;
 
+    @Min(0)
     @Column(nullable = false)
     private Integer stockQuantity;
 
+    @Min(1)
     @Column(nullable = false, updatable = false)
     private Integer lowStockThreshold; 
 
@@ -56,7 +59,4 @@ public class Product {
     public String getDescription() { return description; }
     public Integer getStockQuantity() { return stockQuantity; }
     public Integer getLowStockThreshold() { return lowStockThreshold; }
-
-    public void setDescription(String description) { this.description = description; }
-    public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }
 }

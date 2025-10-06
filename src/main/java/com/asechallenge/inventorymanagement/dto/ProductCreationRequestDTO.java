@@ -4,23 +4,22 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class ProductRequestDTO {
+public class ProductCreationRequestDTO {
 
     @NotBlank(message = "Product name is required")
     private String name;
 
-    private String variant; // optional
+    private String variant;
 
-    private String description; // optional
+    private String description;
 
     @Min(value = 0, message = "Stock quantity must be >= 0")
-    private Integer stockQuantity; // optional, defaults to 0
+    private Integer stockQuantity; 
 
     @NotNull(message = "Low stock threshold is required")
     @Min(value = 1, message = "Low stock threshold must be > 0")
     private Integer lowStockThreshold;
 
-    // Getters & Setters
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 

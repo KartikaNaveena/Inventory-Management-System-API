@@ -13,7 +13,8 @@
 4. [API Endpoints](#api-endpoints)
 5. [Installation & Setup](#installation--setup)
 6. [Testing the API](#testing-the-api)
-7. [Developer](#-developer)
+7. [Developer](#developer)
+
 
 
 ## Project Overview

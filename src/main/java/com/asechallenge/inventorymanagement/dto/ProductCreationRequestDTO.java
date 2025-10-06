@@ -14,11 +14,11 @@ public class ProductCreationRequestDTO {
     private String description;
 
     @Min(value = 0, message = "Stock quantity must be >= 0")
-    private Integer stockQuantity; 
+    private Long stockQuantity; 
 
     @NotNull(message = "Low stock threshold is required")
     @Min(value = 1, message = "Low stock threshold must be > 0")
-    private Integer lowStockThreshold;
+    private Long lowStockThreshold;
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -29,9 +29,9 @@ public class ProductCreationRequestDTO {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public Integer getStockQuantity() { return stockQuantity; }
-    public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }
+    public Long getStockQuantity() { return stockQuantity; }
+    public void setStockQuantity(Long stockQuantity) { this.stockQuantity = stockQuantity; }
 
-    public Integer getLowStockThreshold() { return lowStockThreshold; }
-    public void setLowStockThreshold(Integer lowStockThreshold) { this.lowStockThreshold = lowStockThreshold; }
+    public Long getLowStockThreshold() { return lowStockThreshold; }
+    public void setLowStockThreshold(Long lowStockThreshold) { this.lowStockThreshold = lowStockThreshold; }
 }

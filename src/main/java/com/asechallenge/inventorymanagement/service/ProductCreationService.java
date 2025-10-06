@@ -17,11 +17,11 @@ public class ProductCreationService {
         this.productRepository = productRepository;
     }
 
-     public Product createProduct(ProductCreationRequestDTO request) {
+    public Product createProduct(ProductCreationRequestDTO request) {
         String name = normalizeName(request.getName());
         String variant = normalizeVariant(request.getVariant());
-        int stockQuantity = defaultStockIfNull(request.getStockQuantity());
-        int lowStockThreshold = request.getLowStockThreshold();
+        Long stockQuantity = defaultStockIfNull(request.getStockQuantity());
+        Long lowStockThreshold = request.getLowStockThreshold();
 
         String sku = SkuGenerator.generateSKU(name.trim(), variant.trim());
 
@@ -41,8 +41,8 @@ public class ProductCreationService {
         return (variant == null) ? "" : variant.trim();
     }
 
-    private int defaultStockIfNull(Integer stockQuantity) {
-        return (stockQuantity == null) ? 0 : stockQuantity;
+    private Long defaultStockIfNull(Long stockQuantity) {
+        return (stockQuantity == null) ? 0L : stockQuantity;
     }
 
     private void checkDuplicate(String sku, String name, String variant) {

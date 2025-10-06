@@ -10,6 +10,7 @@ import com.asechallenge.inventorymanagement.util.SkuGenerator;
 
 import jakarta.transaction.Transactional;
 
+import com.asechallenge.inventorymanagement.exception.InvalidStockValueException;
 import com.asechallenge.inventorymanagement.exception.ProductNotFoundException;
 
 @Service
@@ -45,7 +46,7 @@ public class ProductUpdateService {
     @Transactional
     public Product increaseStock(String name, String variant, StockChangeRequestDTO requestDTO) {
         if (requestDTO.getQuantity() <= 0) {
-            throw new IllegalArgumentException("Quantity to increase must be greater than 0.");
+            throw new InvalidStockValueException("Quantity to increase must be greater than 0 and an Integer");
         }
 
         String sku = SkuGenerator.generateSKU(name.trim(), variant.trim());
@@ -63,7 +64,7 @@ public class ProductUpdateService {
     @Transactional
     public Product decreaseStock(String name, String variant, StockChangeRequestDTO requestDTO) {
         if (requestDTO.getQuantity() <= 0) {
-            throw new IllegalArgumentException("Quantity to decrease must be greater than 0.");
+            throw new InvalidStockValueException("Quantity to increase must be greater than 0 and an Integer");
         }
 
         String sku = SkuGenerator.generateSKU(name.trim(), variant.trim());
@@ -75,7 +76,7 @@ public class ProductUpdateService {
                 ));
 
         if (product.getStockQuantity() < requestDTO.getQuantity()) {
-            throw new IllegalArgumentException(
+            throw new InvalidStockValueException(
                     String.format("Cannot decrease stock by %d. Only %d items available.", 
                             requestDTO.getQuantity(), product.getStockQuantity())
             );

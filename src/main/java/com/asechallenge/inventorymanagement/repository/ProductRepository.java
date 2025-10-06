@@ -25,12 +25,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying(clearAutomatically = true)
     @Transactional
     @Query("UPDATE Product p SET p.stockQuantity = p.stockQuantity + :quantity WHERE p.sku = :sku")
-    int increaseStockBySkuIgnoreCase(@Param("sku") String sku, @Param("quantity") int quantity);
+    int increaseStockBySkuIgnoreCase(@Param("sku") String sku, @Param("quantity") Long quantity);
 
     @Modifying(clearAutomatically = true)
     @Transactional
     @Query("UPDATE Product p SET p.stockQuantity = p.stockQuantity - :quantity WHERE p.sku = :sku AND p.stockQuantity >= :quantity")
-    int decreaseStockBySkuIgnoreCase(@Param("sku") String sku, @Param("quantity") int quantity);
+    int decreaseStockBySkuIgnoreCase(@Param("sku") String sku, @Param("quantity") Long quantity);
 
     @Modifying(clearAutomatically = true)
     @Transactional

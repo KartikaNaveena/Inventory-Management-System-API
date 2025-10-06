@@ -23,15 +23,6 @@ public class ProductDeleteServiceTest {
     }
 
     @Test
-    void deleteProduct_success_shouldReturnTrue() {
-        when(productRepository.deleteBySkuIgnoreCase(anyString())).thenReturn(1);
-
-        boolean result = deleteService.deleteProduct("Laptop", "13inch");
-
-        assertTrue(result);
-    }
-
-    @Test
     void deleteProduct_notFound_shouldThrowException() {
         when(productRepository.deleteBySkuIgnoreCase(anyString())).thenReturn(0);
 

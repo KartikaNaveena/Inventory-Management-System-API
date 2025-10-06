@@ -33,6 +33,21 @@ public class GlobalExceptionHandler {
                 .body(buildError(HttpStatus.CONFLICT, ex.getMessage(), request.getRequestURI()));
     }
 
+    // Invalid Stock Value
+   @ExceptionHandler(InvalidStockValueException.class)
+   public ResponseEntity<ErrorResponseDTO> handleInvalidStockValue(
+                InvalidStockValueException ex,
+                HttpServletRequest request) {
+
+        String message = (ex.getMessage() != null && !ex.getMessage().isBlank())
+                ? ex.getMessage()
+                : "Invalid stock value provided.";
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(buildError(HttpStatus.BAD_REQUEST, message, request.getRequestURI()));
+    }
+
     // Product Not Found
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleProductNotFound(

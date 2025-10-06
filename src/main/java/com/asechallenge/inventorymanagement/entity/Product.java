@@ -34,16 +34,16 @@ public class Product {
 
     @Min(0)
     @Column(nullable = false)
-    private Integer stockQuantity;
+    private Long stockQuantity;
 
     @Min(1)
     @Column(nullable = false, updatable = false)
-    private Integer lowStockThreshold; 
+    private Long lowStockThreshold; 
 
     public Product() {}
 
     public Product(String name, String variant, String description,
-                   Integer stockQuantity, Integer lowStockThreshold, String sku) {
+                   Long stockQuantity, Long lowStockThreshold, String sku) {
         this.name = name;
         this.variant = variant;
         this.description = description;
@@ -57,6 +57,6 @@ public class Product {
     public String getVariant() { return variant; }
     public String getSku() { return sku; }
     public String getDescription() { return description; }
-    public Integer getStockQuantity() { return stockQuantity; }
-    public Integer getLowStockThreshold() { return lowStockThreshold; }
+    public Long getStockQuantity() { return stockQuantity; }
+    public Long getLowStockThreshold() { return lowStockThreshold; }
 }

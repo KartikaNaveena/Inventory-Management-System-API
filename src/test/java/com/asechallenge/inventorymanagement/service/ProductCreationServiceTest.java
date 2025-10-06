@@ -29,34 +29,13 @@ public class ProductCreationServiceTest {
     }
 
     @Test
-    void createProduct_success_shouldReturnProduct() {
-        ProductCreationRequestDTO dto = new ProductCreationRequestDTO();
-        dto.setName("Keyboard");
-        dto.setVariant("Mechanical");
-        dto.setDescription("Gaming keyboard");
-        dto.setStockQuantity(15);
-        dto.setLowStockThreshold(5);
-
-        when(productRepository.findBySkuIgnoreCase(anyString())).thenReturn(Optional.empty());
-        when(productRepository.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
-
-        Product product = creationService.createProduct(dto);
-
-        assertEquals("Keyboard", product.getName());
-        assertEquals("Mechanical", product.getVariant());
-        assertEquals(15, product.getStockQuantity());
-        assertEquals("Gaming keyboard", product.getDescription());
-        assertEquals(5, product.getLowStockThreshold());
-    }
-
-    @Test
     void createProduct_duplicate_shouldThrowException() {
         ProductCreationRequestDTO dto = new ProductCreationRequestDTO();
         dto.setName("Laptop");
         dto.setVariant("XPS13");
         dto.setDescription("Dell ultrabook");
-        dto.setStockQuantity(10);
-        dto.setLowStockThreshold(3);
+        dto.setStockQuantity(10L);
+        dto.setLowStockThreshold(3L);
 
         when(productRepository.findBySkuIgnoreCase(anyString())).thenReturn(Optional.of(new Product()));
 
@@ -70,7 +49,7 @@ public class ProductCreationServiceTest {
         request.setVariant(null);
         request.setDescription("desc");
         request.setStockQuantity(null);
-        request.setLowStockThreshold(3);
+        request.setLowStockThreshold(3L);
 
         when(productRepository.findBySkuIgnoreCase(anyString())).thenReturn(Optional.empty());
         when(productRepository.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));

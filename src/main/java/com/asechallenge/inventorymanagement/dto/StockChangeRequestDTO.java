@@ -4,8 +4,8 @@ import jakarta.validation.constraints.Min;
 
 public class StockChangeRequestDTO {
     @Min(1)
-    private int quantity;
+    private Long quantity;
     
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public Long getQuantity() { return quantity; }
+    public void setQuantity(Long quantity) { this.quantity = quantity; }
 }

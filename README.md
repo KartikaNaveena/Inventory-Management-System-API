@@ -9,11 +9,11 @@
     - [Separation of Concerns](#separation-of-concerns)
     - [Error Handling](#error-handling)
     - [Test Cases](#test-cases)
-    - [Project Structure](#project-hierarchy--folder-structure)
-4. [API Endpoints](#api-endpoints--usage)
-5. [Setup & Running Locally](#setup--running-locally)
+    - [Project Structure](#project-structure)
+4. [API Endpoints](#api-endpoints)
+5. [Installation & Setup](#installation--setup)
 6. [Testing the API](#testing-the-api)
-7. [Author / Contact](#author--contact)
+7. [Developer](#developer)
 
 ## Project Overview
 
@@ -112,8 +112,8 @@ The API provides **clear and standardized responses** for both successful operat
 
 | Test Class | Key Scenarios Tested |
 |------------|--------------------|
-| **ProductCreationServiceTest** | - Creating a product with missing `name` or `lowStockThreshold` (`IllegalArgumentException`)<br>- Attempting to create a duplicate product (`DuplicateProductException`)<br>- Creating a product with null `stockQuantity` defaults it to 0 |
-| **ProductUpdateServiceTest** | - Updating product with blank or null description (`IllegalArgumentException`)<br>- Increasing stock valid case<br>- Decreasing stock valid case<br>- Decreasing stock beyond available quantity (`InvalidStockValueException`) |
+| **ProductCreationServiceTest** | - Attempting to create a duplicate product (`DuplicateProductException`)<br>- Creating a product with null `stockQuantity` defaults it to 0 |
+| **ProductUpdateServiceTest** | - Updating product with blank or null description (`IllegalArgumentException`)<br>- Decreasing stock beyond available quantity (`InvalidStockValueException`) |
 | **ProductQueryServiceTest** | - Fetching all products when none exist (`ProductNotFoundException`)<br>- Fetching products by name with no match (`ProductNotFoundException`)<br>- Fetching product by name and variant when not found (`ProductNotFoundException`)<br>- Fetching low-stock products when none exist (`ProductNotFoundException`) |
 | **ProductDeleteServiceTest** | - Attempting to delete a non-existent product (`ProductNotFoundException`) |
 
@@ -195,5 +195,280 @@ inventory-management-system-api/
 | Endpoint | Method | Description | Request DTO | Response DTO |
 |----------|--------|-------------|------------|-------------|
 | `/api/products?lowStock=true` | GET | Fetch all products with stock below `lowStockThreshold` | N/A | `ProductResponseDTO` (List) |
+
+## Installation & Setup
+
+Follow these steps to set up the Inventory Management API locally:
+
+1. **Prerequisites**  
+     Ensure you have installed:  
+   - Java 17+  
+   - Maven 3.6+  
+   - Git  
+   - (Optional) Postman for testing  
+
+2. **Clone the Repository**  
+   ```bash
+   git clone https://github.com/KartikaNaveena/Inventory-Management-System-API.git
+   cd Inventory-Management-System-API
+3. **Build the Project**  
+     Run the following command to download dependencies and compile the project:  
+    ```bash
+    mvn clean install
+    ```
+
+4. **Run the Application**  
+     Start the Spring Boot server using:  
+    ```bash
+    mvn spring-boot:run
+    ```
+5. **Run Tests**  
+     To execute all unit tests, use the following command:
+
+    ```bash
+    mvn test
+    ```
+6. **Access the application**
+
+   API Base URL: http://localhost:8080/api/products
+
+## Testing the API
+
+> **Note:** The product names and variants used in the examples below (e.g., `IPhone`, `Wireless Mouse`) are for demonstration purposes only.  
+> When testing the APIs locally, replace them with the `name` and `variant` of the products in your own database.
+
+> **How to test:**  
+> - Run the Spring Boot application locally (default: `http://localhost:8080`).  
+> - Use an API client like **Postman** to send requests.  
+> - For endpoints requiring query parameters (like `name` or `variant`), add them in the query/params section of your API client.  
+> - For endpoints requiring a request body (like POST or PATCH), add the JSON data in the body section of your API client.  
+> - Send the request and verify the response matches the examples below.
+
+### 🟢 Get All Products
+**Method:** `GET`  
+**Endpoint:** `http://localhost:8080/api/products`
+
+**Expected Response:**
+```json
+[
+  {
+    "name": "Wireless Mouse",
+    "variant": "Black",
+    "description": "A wireless mouse for computers",
+    "stockQuantity": 404,
+    "lowStockThreshold": 300,
+    "sku": "wirelessmouseBlack"
+  },
+  {
+    "name": "Wireless Keyboard",
+    "variant": "Black",
+    "description": "A wireless keyboard for computers",
+    "stockQuantity": 400,
+    "lowStockThreshold": 300,
+    "sku": "wirelesskeyboardBlack"
+  }
+]
+
+
+```
+
+### 🟠 Get Low Stock Products
+
+**Method:** `GET`  
+**Endpoint:** `http://localhost:8080/api/products?lowStock=true`
+
+**Expected Response:**
+```json
+[
+  {
+    "name": "Wireless Mouse",
+    "variant": "",
+    "description": "A wireless mouse for computers",
+    "stockQuantity": 100,
+    "lowStockThreshold": 300,
+    "sku": "wirelessmouse"
+  },
+  {
+    "name": "Wireless Mouse",
+    "variant": "Blue",
+    "description": "A wireless mouse for computers",
+    "stockQuantity": 100,
+    "lowStockThreshold": 300,
+    "sku": "wirelessmouseBlue"
+  }
+]
+```
+
+### 🔵 Get Product by Name
+
+**Method:** `GET`  
+**Endpoint:** `http://localhost:8080/api/products?name=Wireless Mouse`
+
+**Expected Response:**
+```json
+[
+  {
+    "name": "Wireless Mouse",
+    "variant": "Black",
+    "description": "A wireless mouse for computers",
+    "stockQuantity": 404,
+    "lowStockThreshold": 300,
+    "sku": "wirelessmouseBlack"
+  },
+  {
+    "name": "Wireless Mouse",
+    "variant": "Blue",
+    "description": "A wireless mouse for computers",
+    "stockQuantity": 100,
+    "lowStockThreshold": 300,
+    "sku": "wirelessmouseBlue"
+  }
+]
+```
+
+### 🟣 Get Product by Name & Variant
+
+**Method:** `GET`  
+**Endpoint:** `http://localhost:8080/api/products?name=Wireless Mouse&variant=Blue`
+
+**Expected Response:**
+```json
+{
+  "name": "Wireless Mouse",
+  "variant": "Blue",
+  "description": "A wireless mouse for computers",
+  "stockQuantity": 100,
+  "lowStockThreshold": 300,
+  "sku": "wirelessmouseBlue"
+}
+```
+
+### 🟢 Create Product
+
+**Method:** `POST`  
+**Endpoint:** `http://localhost:8080/api/products`
+
+**Request Body:**
+```json
+{
+  "name": "IPhone",
+  "variant": "13",
+  "description": "An IOS mobile",
+  "stockQuantity": 100,
+  "lowStockThreshold": 300
+}
+```
+**Expected Response:**
+```json
+{
+  "name": "IPhone",
+  "variant": "13",
+  "description": "An IOS mobile",
+  "stockQuantity": 100,
+  "lowStockThreshold": 300,
+  "sku": "iphone13"
+}
+
+```
+### 🟠 Update Product 
+> **Note:** Currently, the Product Update API only allows updating the description field.
+
+> Fields like name, variant, sku, and lowStockThreshold are not relevant for updating.
+
+> Stock quantity cannot be updated via this endpoint — it is managed separately through the Stock Management APIs (/stock/increase and /stock/decrease).
+
+**Method:** `PATCH`  
+**Endpoint:** `http://localhost:8080/api/products?name=IPhone&variant=13`
+
+**Request Body:**
+
+```json
+{
+  "description": "An IOS mobile of version 13"
+}
+```
+**Expected Response:**
+```json
+{
+    "name": "IPhone",
+    "variant": "13",
+    "description": "An IOS mobile of version 13",
+    "stockQuantity": 100,
+    "lowStockThreshold": 300,
+    "sku": "iphone13"
+}
+```
+### 🟢 Increase Product Stock
+
+**Method:** `PATCH`  
+**Endpoint:** `http://localhost:8080/api/products/stock/increase?name=IPhone&variant=13`
+
+**Request Body:**
+```json
+{
+  "quantity": 10
+}
+```
+**Expected Response:**
+```json
+{
+  "name": "IPhone",
+  "variant": "13",
+  "description": "An IOS mobile of version 13",
+  "stockQuantity": 110,
+  "lowStockThreshold": 300,
+  "sku": "iphone13"
+}
+
+```
+
+### 🔴 Decrease Product Stock
+
+**Method:** `PATCH`  
+**Endpoint:** `http://localhost:8080/api/products/stock/decrease?name=IPhone&variant=13`
+
+**Request Body:**
+```json
+{
+  "quantity": 10
+}
+```
+**Expected Response:**
+```json
+{
+  "name": "IPhone",
+  "variant": "13",
+  "description": "An IOS mobile of version 13",
+  "stockQuantity": 100,
+  "lowStockThreshold": 300,
+  "sku": "iphone13"
+}
+
+
+```
+
+### 🗑️ Delete Product
+
+**Method:** `DELETE`  
+**Endpoint:** `http://localhost:8080/api/products?name=IPhone&variant=13`
+
+**Request Body:** None
+
+**Expected Response:** None (204 No Content)
+
+**Notes:**
+- This API deletes the product identified by `name` and `variant`.  
+- No request body is required.  
+- The response returns **no content** (HTTP status 204) if the deletion is successful.  
+- Once deleted, the product cannot be retrieved unless re-created via the Create Product API.
+
+## 👨‍💻 Developer
+
+**Saladi Kartika Naveena** – B.Tech (CSE, 2025), two SDE internships at Amazon.
+
+### 📧 Contact
+- Email: [naveenasaladi27@gmail.com](mailto:naveenasaladi27@gmail.com)  
+- LinkedIn: [linkedin.com/in/saladi-kartika-naveena](https://www.linkedin.com/in/saladi-kartika-naveena/)
+
 
 
